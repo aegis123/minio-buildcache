@@ -8,7 +8,9 @@ implementation which uses [Minio Object Storage](https://minio.io/) to store the
 
 ## Compatibility
 
-Plugin made with gradle 4.3.1, might work with gradle version 3.5 and up but haven't tested.
+Plugin made with gradle 4.3.1 so works for 4.3.1 and up.
+Might work with gradle version 3.5 and up but haven't tested.
+
 
 ## Use in your project
 
@@ -41,7 +43,7 @@ The Minio build cache implementation has a few configuration options:
 
 | Configuration Key | Description | Default Value |
 | ----------------- | ----------- | ----------- |
-| endpoint | The AWS region the S3 bucket is located in. | |
+| endpoint | The endpoint where Minio is hosted. | |
 | access key | The minio access key. | |
 | secret key | The minio secret key. | |
 | bucket | The name of the AWS S3 bucket where cache objects should be stored. | |
