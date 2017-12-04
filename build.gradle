@@ -1,0 +1,23 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.2.0'
+    id 'com.gradle.plugin-publish' version '0.9.7'
+    id "org.shipkit.java" version '0.9.79'
+    id 'java-gradle-plugin'
+}
+
+project.extensions.kotlinVersion='1.2.0'
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+
+
+group 'com.drost.gradle'
+version '1.0-SNAPSHOT'
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.3.1'
+}

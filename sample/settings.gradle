@@ -1,0 +1,30 @@
+rootProject.name = 'sample'
+
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.drost.gradle:minio-buildcache:1.0-SNAPSHOT'
+    }
+}
+
+apply plugin: 'com.drost.gradle.minio-buildcache'
+
+ext.isCiServer = System.getenv().containsKey("CI")
+
+buildCache {
+    local {
+        enabled = !isCiServer
+    }
+    remote(com.drost.gradle.buildcache.minio.MinioBuildCache) {
+        // pass properties to these in any way you like.
+        endpoint = project.properties['com.drost.gradle.caching.endpoint']
+        accessKey = project.properties['com.drost.gradle.caching.accesskey']
+        secretKey = project.properties['com.drost.gradle.caching.secretkey']
+        bucket = project.properties['com.drost.gradle.caching.bucket']
+        push = project.properties.getOrDefault('com.drost.gradle.caching.push', isCiServer) as boolean
+    }
+}

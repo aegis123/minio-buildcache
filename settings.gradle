@@ -1,0 +1,3 @@
+include 'minio-buildcache', 'sample'
+
+rootProject.name = 'minio-buildcache-plugin'
