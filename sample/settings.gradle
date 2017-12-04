@@ -20,11 +20,11 @@ buildCache {
         enabled = !isCiServer
     }
     remote(com.drost.gradle.buildcache.minio.MinioBuildCache) {
-        // pass properties to these in any way you like.
-        endpoint = project.properties['com.drost.gradle.caching.endpoint']
-        accessKey = project.properties['com.drost.gradle.caching.accesskey']
-        secretKey = project.properties['com.drost.gradle.caching.secretkey']
-        bucket = project.properties['com.drost.gradle.caching.bucket']
-        push = project.properties.getOrDefault('com.drost.gradle.caching.push', isCiServer) as boolean
+        //TODO configure with your own server this is using the minio test server
+        endpoint = 'https://play.minio.io:9000'
+        accessKey = 'Q3AM3UQ867SPQQA43P2F'
+        secretKey = 'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG'
+        bucket = 'minio-gradle-test'
+        push = true
     }
 }
