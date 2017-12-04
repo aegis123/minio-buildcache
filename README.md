@@ -32,7 +32,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.drost.gradle:minio-buildcache:1.0'
+        classpath 'gradle.plugin.com.drost.gradle:minio-buildcache:1.0'
     }
 }
 ```
@@ -63,6 +63,7 @@ buildCache {
         enabled = !isCiServer
     }
     remote(com.drost.gradle.buildcache.minio.MinioBuildCache) {
+        // use minio playground server
         endpoint='https://play.minio.io:9000'
         accessKey='Q3AM3UQ867SPQQA43P2F'
         secretKey='zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG'
