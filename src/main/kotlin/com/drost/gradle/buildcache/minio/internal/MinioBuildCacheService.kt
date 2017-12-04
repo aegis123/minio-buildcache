@@ -1,21 +1,18 @@
 package com.drost.gradle.buildcache.minio.internal
 
 import io.minio.MinioClient
-import mu.KotlinLogging
 import org.gradle.caching.*
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException
+import java.util.logging.Level
+import java.util.logging.Logger
 
-private val logger = KotlinLogging.logger {}
-
-class MinioBuildCacheService(private val minioClient: MinioClient, private val bucket: String) : BuildCacheService {
-    companion object {
-        val buildCacheContentType = "application/vnd.gradle.build-cache-artifact"
-    }
+class MinioBuildCacheService(val minioClient: MinioClient, val bucket: String) : BuildCacheService {
+    private val BUILD_CACHE_CONTENT_TYPE = "application/vnd.gradle.build-cache-artifact"
 
     override fun store(key: BuildCacheKey?, writer: BuildCacheEntryWriter?) {
-        logger.info { "store to $bucket" }
+        println("store to $bucket")
         writer?.let {
 
             try {
@@ -24,10 +21,10 @@ class MinioBuildCacheService(private val minioClient: MinioClient, private val b
 
                 val inputStream = ByteArrayInputStream(os.toByteArray())
                 key?.let {
-                    logger.info { "name: ${it.displayName}" }
-                    logger.info { "id: ${it.hashCode}" }
-                    logger.info { "size: ${writer.size}" }
-                    minioClient.putObject(bucket, it.hashCode, inputStream, writer.size, buildCacheContentType)
+                    println(it.displayName)
+                    println(it.hashCode)
+                    println("filesize " + writer.size)
+                    minioClient.putObject(bucket, it.hashCode, inputStream, writer.size, BUILD_CACHE_CONTENT_TYPE)
                 }
             } catch (error: IOException) {
                 throw BuildCacheException("Error while storing cache object in Minio bucket", error)
@@ -40,16 +37,16 @@ class MinioBuildCacheService(private val minioClient: MinioClient, private val b
     }
 
     override fun load(key: BuildCacheKey?, reader: BuildCacheEntryReader?): Boolean {
-        logger.info { "load from $bucket" }
+        println("load from $bucket")
         key?.let {
-            logger.info { "name: ${it.displayName}" }
-            logger.info { "id: ${it.hashCode}" }
+            println(it.displayName)
+            println(it.hashCode)
 
             val hashCode = it.hashCode
             try {
                 minioClient.statObject(bucket, hashCode)
             } catch (error: Exception) {
-                logger.warn(error, {"Could not find cache item on remote"})
+                Logger.getGlobal().log(Level.WARNING, "could not find cached file", error)
                 return false
             }
 

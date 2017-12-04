@@ -3,9 +3,9 @@
 //To leverage Shipkit fully, please fix the TODO items, refer to our Getting Started Guide for help:
 // https://github.com/mockito/shipkit/wiki/Getting-started-with-Shipkit
 shipkit {
-   gitHub.repository = "aegis123/minio-buildcache"
-   gitHub.readOnlyAuthToken = "b9d891324837371823a8cb7931295b01d60a233a"
-   gitHub.writeAuthToken = System.getenv("GH_WRITE_TOKEN")
+    gitHub.repository = "aegis123/minio-buildcache"
+    gitHub.readOnlyAuthToken = "b9d891324837371823a8cb7931295b01d60a233a"
+    gitHub.writeAuthToken = System.getenv("GH_WRITE_TOKEN")
 }
 
 // we don't use bintray to deploy the plugins we should gradle plugin repo for that.
