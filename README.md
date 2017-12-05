@@ -1,6 +1,6 @@
 # Minio Gradle build cache
 
-[![Apache License 2.0](https://img.shields.io/badge/License-Apache%20License%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+[![Apache License 2.0](https://img.shields.io/badge/License-Apache%20License%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html) [![Build Status](https://travis-ci.org/aegis123/minio-buildcache.svg?branch=master)](https://travis-ci.org/aegis123/minio-buildcache)
 
 This is a custom Gradle [build cache](https://docs.gradle.org/current/userguide/build_cache.html)
 implementation which uses [Minio Object Storage](https://minio.io/) to store the cache objects.
