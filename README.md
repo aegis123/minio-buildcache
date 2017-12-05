@@ -26,14 +26,15 @@ dependency to the plugin to your `settings.gradle` file:
 
 ```
 buildscript {
-    repositories {
-        jcenter()
-        gradlePluginPortal()
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
     }
-
-    dependencies {
-        classpath 'gradle.plugin.com.drost.gradle:minio-buildcache:1.0'
-    }
+    jcenter()
+  }
+  dependencies {
+    classpath "gradle.plugin.com.drost.gradle:minio-buildcache:1.0"
+  }
 }
 ```
 
