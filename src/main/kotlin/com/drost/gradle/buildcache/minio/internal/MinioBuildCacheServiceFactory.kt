@@ -4,38 +4,30 @@ import com.drost.gradle.buildcache.minio.MinioBuildCache
 import org.gradle.caching.BuildCacheService
 import org.gradle.caching.BuildCacheServiceFactory
 import io.minio.MinioClient
+import org.gradle.caching.BuildCacheException
 
 class MinioBuildCacheServiceFactory : BuildCacheServiceFactory<MinioBuildCache> {
-    override fun createBuildCacheService(config: MinioBuildCache?, describer: BuildCacheServiceFactory.Describer?): BuildCacheService {
-        describer?.let {
-            @Suppress("NAME_SHADOWING")
-            val describer = it
-            config?.let {
-                @Suppress("NAME_SHADOWING")
-                val config = it
-                describer.type("Minio Object store")
-                        .config("Endpoint", config.endpoint)
-                        .config("Access key", config.accessKey)
-                        .config("Secret key", config.secretKey)
-                        .config("Bucket", config.bucket)
+    override fun createBuildCacheService(config: MinioBuildCache, describer: BuildCacheServiceFactory.Describer): BuildCacheService {
+        verifyConfig(config)
 
-                verifyConfig(it)
+        describer.type("Minio Object store")
+                .config("Endpoint", config.endpoint)
+                .config("Access key", config.accessKey)
+                .config("Secret key", config.secretKey)
+                .config("Bucket", config.bucket)
 
-                val minioClient = createMinioClient(it)
+        val minioClient = MinioClient(config.endpoint, config.accessKey, config.secretKey)
 
-                config.bucket?.let {
-                    if (!minioClient.bucketExists(it)) {
-                        minioClient.makeBucket(it)
-                    }
-                    return MinioBuildCacheService(minioClient, it)
-                }
+        val bucket = config.bucket
+        bucket?.let {
+            if (!minioClient.bucketExists(bucket)) {
+                minioClient.makeBucket(bucket)
             }
-        }
-        throw IllegalStateException("could not create MinioBuildCache.")
-    }
 
-    private fun createMinioClient(config: MinioBuildCache): MinioClient
-            = MinioClient(config.endpoint, config.accessKey, config.secretKey)
+            return MinioBuildCacheService(minioClient, it)
+        }
+        throw BuildCacheException("Could not create MinioBuildCacheService because bucket was null which should be possible since we verify for that")
+    }
 
     private fun verifyConfig(config: MinioBuildCache) {
         if (config.endpoint.isNullOrEmpty()) {
