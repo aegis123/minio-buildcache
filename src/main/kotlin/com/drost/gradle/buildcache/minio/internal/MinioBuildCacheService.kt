@@ -6,24 +6,28 @@ import org.gradle.caching.*
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException
-import java.util.logging.Level
-import java.util.logging.Logger
 
 class MinioBuildCacheService(private val minioClient: MinioClient, private val bucket: String) : BuildCacheService {
+    private var createBucketFirst = true
     private companion object {
-        val buildCacheContentType = "application/vnd.gradle.build-cache-artifact"
+        const val buildCacheContentType = "application/vnd.gradle.build-cache-artifact"
         val logger = KotlinLogging.logger {}
     }
 
     override fun store(key: BuildCacheKey, writer: BuildCacheEntryWriter) {
         try {
+            if (createBucketFirst && !minioClient.bucketExists(bucket)) {
+                minioClient.makeBucket(bucket)
+                createBucketFirst = false
+            }
             val os = ByteArrayOutputStream()
             writer.writeTo(os)
 
             val inputStream = ByteArrayInputStream(os.toByteArray())
 
             minioClient.putObject(bucket, key.hashCode, inputStream, os.size().toLong(), buildCacheContentType)
-            logger.info { "Stored cache file ${key.hashCode} to $bucket" }
+
+            logger.debug { "Stored cache file ${key.hashCode} to $bucket" }
         } catch (error: IOException) {
             throw BuildCacheException("Error while storing cache object in Minio bucket", error)
         }
@@ -31,6 +35,10 @@ class MinioBuildCacheService(private val minioClient: MinioClient, private val b
 
     override fun load(key: BuildCacheKey, reader: BuildCacheEntryReader): Boolean {
         return try {
+            if (createBucketFirst && !minioClient.bucketExists(bucket)) {
+                minioClient.makeBucket(bucket)
+                createBucketFirst = false
+            }
             minioClient.statObject(bucket, key.hashCode)
             try {
                 val inputStream = minioClient.getObject(bucket, key.hashCode)
@@ -40,7 +48,7 @@ class MinioBuildCacheService(private val minioClient: MinioClient, private val b
             }
             true
         } catch (error: Exception) {
-            logger.info("could not find cached file", error)
+            logger.debug("could not find cached file", error)
             false
         }
     }

@@ -6,6 +6,9 @@ shipkit {
     gitHub.repository = "aegis123/minio-buildcache"
     gitHub.readOnlyAuthToken = "b9d891324837371823a8cb7931295b01d60a233a"
     gitHub.writeAuthToken = System.getenv("GH_WRITE_TOKEN")
+    releaseNotes.publicationRepository='https://plugins.gradle.org/plugin/com.drost.gradle.minio-buildcache'
+    releaseNotes.file = project.rootProject.file('CHANGELOG.md').absolutePath
+    team.developers = ['aegis123:Dylan Drost']
 }
 
 // we don't use bintray to deploy the plugins we should gradle plugin repo for that.

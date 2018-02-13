@@ -1,7 +1,7 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.2.0'
-    id 'com.gradle.plugin-publish' version '0.9.9'
-    id "org.shipkit.java" version '0.9.79'
+    id 'org.jetbrains.kotlin.jvm' version '1.2.21'
+    id 'com.gradle.plugin-publish' version '0.9.10'
+    id 'org.shipkit.java' version '1.0.10'
     id 'java-gradle-plugin'
 }
 
@@ -9,10 +9,10 @@ apply plugin: 'maven-publish'
 apply plugin: 'com.gradle.plugin-publish'
 apply plugin: 'org.shipkit.gradle-plugin'
 
-project.extensions.kotlinVersion='1.2.0'
+project.extensions.kotlinVersion='1.2.21'
 
 group 'com.drost.gradle'
-version '1.0'
+version '1.1'
 
 repositories {
     jcenter()
@@ -22,12 +22,12 @@ dependencies {
     compileOnly gradleApi()
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion"
-    implementation 'io.minio:minio:3.0.10'
-    implementation 'io.github.microutils:kotlin-logging:1.4.6'
+    implementation 'io.minio:minio:3.0.12'
+    implementation 'io.github.microutils:kotlin-logging:1.4.9'
 
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:2.12.0'
-    testImplementation 'com.nhaarman:mockito-kotlin-kt1.1:1.5.0'
+    testImplementation 'org.mockito:mockito-core:2.15.0'
+    testImplementation 'com.nhaarman:mockito-kotlin:1.5.0'
     testImplementation gradleTestKit()
 }
 
@@ -62,5 +62,5 @@ pluginBundle {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.3.1'
+    gradleVersion = '4.5.1'
 }

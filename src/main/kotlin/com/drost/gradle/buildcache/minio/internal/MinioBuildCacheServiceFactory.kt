@@ -15,15 +15,15 @@ class MinioBuildCacheServiceFactory : BuildCacheServiceFactory<MinioBuildCache> 
                 .config("Access key", config.accessKey)
                 .config("Secret key", config.secretKey)
                 .config("Bucket", config.bucket)
+                .config("region", config.region)
 
-        val minioClient = MinioClient(config.endpoint, config.accessKey, config.secretKey)
+        val minioClient = if (config.region != null)
+                                MinioClient(config.endpoint, config.accessKey, config.secretKey, config.region)
+                            else
+                                MinioClient(config.endpoint, config.accessKey, config.secretKey)
 
         val bucket = config.bucket
         bucket?.let {
-            if (!minioClient.bucketExists(bucket)) {
-                minioClient.makeBucket(bucket)
-            }
-
             return MinioBuildCacheService(minioClient, it)
         }
         throw BuildCacheException("Could not create MinioBuildCacheService because bucket was null which should be possible since we verify for that")

@@ -19,59 +19,75 @@ class MinioBuildCacheServiceFactoryTest {
     }
 
     @Test
-    fun testHappyPath() {
+    fun testHappyWithRegionPath() {
         val conf = MinioBuildCache()
 
         conf.accessKey = "random_access_key"
         conf.secretKey = "random_secret_key"
         conf.endpoint = "10.10.10.10"
         conf.bucket = "random.bucket"
+        conf.region = "us_east_1"
 
         val service = subject.createBuildCacheService(conf, buildCacheDescriber)
 
         assertNotNull(service)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
+    fun testHappyWithoutRegionPath() {
+        val conf = MinioBuildCache()
+
+        conf.accessKey = "random_access_key"
+        conf.secretKey = "random_secret_key"
+        conf.endpoint = "10.10.10.10"
+        conf.bucket = "random.bucket"
+        conf.region = null
+
+        val service = subject.createBuildCacheService(conf, buildCacheDescriber)
+
+        assertNotNull(service)
+    }
+
+    @Test(expected = IllegalStateException::class)
     @Throws(Exception::class)
     fun testIllegalConfigWithoutAccessKey() {
         val conf = MinioBuildCache()
         conf.secretKey = "random_secret_key"
         conf.endpoint = "random_endpoint"
-        conf.bucket = "random_bucket"
+        conf.bucket = "random-bucket"
 
         subject.createBuildCacheService(conf, buildCacheDescriber)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = IllegalStateException::class)
     @Throws(Exception::class)
     fun testIllegalConfigWithoutBucket() {
         val conf = MinioBuildCache()
         conf.accessKey = "random_access_key"
         conf.secretKey = "random_secret_key"
-        conf.endpoint = "random_endpoint"
+        conf.endpoint = "random-endpoint"
 
         subject.createBuildCacheService(conf, buildCacheDescriber)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = IllegalStateException::class)
     @Throws(Exception::class)
     fun testIllegalConfigWithoutSecretKey() {
         val conf = MinioBuildCache()
         conf.accessKey = "random_access_key"
         conf.endpoint = "random_endpoint"
-        conf.bucket = "random_bucket"
+        conf.bucket = "random-bucket"
 
         subject.createBuildCacheService(conf, buildCacheDescriber)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = IllegalStateException::class)
     @Throws(Exception::class)
     fun testIllegalConfigWithoutEndpoint() {
         val conf = MinioBuildCache()
         conf.accessKey = "random_access_key"
         conf.secretKey = "random_secret_key"
-        conf.bucket = "random_bucket"
+        conf.bucket = "random-bucket"
 
         subject.createBuildCacheService(conf, buildCacheDescriber)
     }
@@ -82,7 +98,7 @@ class MinioBuildCacheServiceFactoryTest {
             return this
         }
 
-        override fun config(name: String, value: String): Describer {
+        override fun config(name: String, value: String?): Describer {
             return this
         }
     }

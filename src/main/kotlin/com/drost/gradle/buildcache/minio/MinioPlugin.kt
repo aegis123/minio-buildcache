@@ -9,7 +9,7 @@ class MinioPlugin : Plugin<Settings> {
     companion object : KLogging()
 
     override fun apply(settings: Settings) {
-        logger.info { "apply cache plugin" }
+        logger.debug { "apply cache plugin" }
         val buildCache = settings.buildCache
         buildCache.registerBuildCacheService(MinioBuildCache::class.java, MinioBuildCacheServiceFactory::class.java)
     }

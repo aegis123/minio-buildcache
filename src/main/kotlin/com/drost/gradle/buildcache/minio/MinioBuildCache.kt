@@ -7,4 +7,5 @@ open class MinioBuildCache : AbstractBuildCache() {
     var accessKey: String? = null
     var secretKey: String? = null
     var bucket: String? = null
+    var region: String? = null
 }
