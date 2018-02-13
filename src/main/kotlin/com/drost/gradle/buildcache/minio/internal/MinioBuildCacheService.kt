@@ -48,7 +48,6 @@ class MinioBuildCacheService(private val minioClient: MinioClient, private val b
             }
             true
         } catch (error: Exception) {
-            logger.debug("could not find cached file", error)
             false
         }
     }
